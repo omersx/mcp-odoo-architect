@@ -6,7 +6,7 @@ const { StdioServerTransport } = require("@modelcontextprotocol/sdk/server/stdio
 const { CallToolRequestSchema, ListToolsRequestSchema } = require("@modelcontextprotocol/sdk/types.js");
 const odoo = require("./lib/odoo");
 
-const server = new Server({ name: "mcp-odoo-architect", version: "0.1.0" }, { capabilities: { tools: {} } });
+const server = new Server({ name: "mcp-odoo-architect", version: "0.2.0" }, { capabilities: { tools: {} } });
 
 const TOOLS = [
   {

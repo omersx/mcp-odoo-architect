@@ -1,6 +1,6 @@
 {
   "name": "mcp-odoo-architect",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "MCP server: scope safe Odoo add-ons (plan, generate, validate, tradeoffs). Deterministic local composer, no API keys.",
   "type": "commonjs",
   "main": "index.js",
