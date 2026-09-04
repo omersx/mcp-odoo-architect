@@ -63,6 +63,20 @@ const TOOLS = [
     name: "list_presets",
     description: "List the 4 built-in demo briefs (urgency, pharmacy, POS discount, Shopify bridge).",
     inputSchema: { type: "object", properties: {} }
+  },
+  {
+    name: "save_addon",
+    description: "Generate the starter and write all files to output_dir/<module>/ on disk. Returns directory, tree, and validation.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        requirement: { type: "string" },
+        output_dir: { type: "string", description: "Existing parent directory, e.g. ./custom_addons" },
+        guardrails: { type: "array", items: { type: "string" } },
+        odoo_version: { type: "string" }
+      },
+      required: ["requirement", "output_dir"]
+    }
   }
 ];
 
@@ -89,6 +103,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
     if (name === "list_presets") {
       return { content: [{ type: "text", text: JSON.stringify(odoo.PRESETS, null, 2) }] };
+    }
+    if (name === "save_addon") {
+      const saved = odoo.saveAddon(a.requirement, a.output_dir, a.guardrails, a.odoo_version);
+      const summary = { module: saved.module, scenario: saved.scenario, directory: saved.directory, files: saved.files, tree: saved.tree, validation: saved.validation };
+      return { content: [{ type: "text", text: JSON.stringify(summary, null, 2) }] };
     }
     throw new Error(`unknown tool: ${name}`);
   } catch (e) {

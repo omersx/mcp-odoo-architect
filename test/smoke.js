@@ -44,7 +44,7 @@ async function main() {
     await send("initialize", { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "smoke", version: "0" } });
     const list = await send("tools/list", {});
     const names = list.result.tools.map((t) => t.name);
-    check("stdio 5 tools", names.length === 5, names.join(","));
+    check("stdio 6 tools", names.length === 6, names.join(","));
     const draft = await send("tools/call", { name: "draft_plan", arguments: { requirement: "For pharmacy sales, warn when a product expires within 30 days." } });
     const dp = JSON.parse(textOf(draft));
     check("stdio draft_plan", dp.module === "biz_bridge_pharmacy_expiry", dp.module);
@@ -55,6 +55,19 @@ async function main() {
     check("stdio missing-arg error", bad.result.isError === true);
     const unk = await send("tools/call", { name: "nope", arguments: {} });
     check("stdio unknown-tool error", unk.result.isError === true);
+    const os = require("os");
+    const dir = await send("tools/call", { name: "save_addon", arguments: { requirement: "Track company car service dates and warn the office coordinator when maintenance is overdue.", output_dir: os.tmpdir() } });
+    const saved = JSON.parse(textOf(dir));
+    const fs2 = require("fs");
+    const manifestOk = fs2.existsSync(require("path").join(saved.directory, "__manifest__.py"));
+    check("stdio save_addon writes disk", manifestOk && saved.files.length === 11, saved.directory);
+    const trav = await send("tools/call", { name: "save_addon", arguments: { requirement: "x", output_dir: "../evil" } });
+    check("stdio save_addon relative dir ok", !trav.result.isError);
+    check("lib keys traversal-safe", Object.keys(odoo.generateAddon("Track service dates.", null, "18.0").files).every((k) => !k.includes("..")));
+    try {
+      fs2.rmSync(require("path").join(__dirname, "..", "..", "evil"), { recursive: true, force: true });
+      fs2.rmSync(saved.directory, { recursive: true, force: true });
+    } catch (e) { /* tidy only */ }
   } finally {
     child.kill();
   }

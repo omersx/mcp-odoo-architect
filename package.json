@@ -12,6 +12,7 @@
     "test": "node test/smoke.js"
   },
   "license": "MIT",
+  "files": ["index.js", "lib/", "README.md", "LICENSE"],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0"
   }

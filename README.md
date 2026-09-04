@@ -9,6 +9,7 @@ Separate from the [WebMCP Challenge entry](https://github.com/omersx/odoo-archit
 - `draft_plan` — 4-section architecture plan from a business requirement
 - `generate_addon` — 11-file Odoo starter (manifest, models, views, security, tests, README)
 - `validate_addon` — 7 static checks over the starter
+- `save_addon` — generate + write all files to `output_dir/<module>/` on disk
 - `explain_tradeoffs` — risks, rejected alternatives, why upgrade-safe
 - `list_presets` — 4 demo briefs (urgency, pharmacy, POS discount, Shopify bridge)
 
